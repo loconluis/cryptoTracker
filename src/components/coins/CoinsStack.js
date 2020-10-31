@@ -2,7 +2,7 @@ import React from 'react';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import CoinsScreen from './CoinsScreen';
-import CoinsDetails from './CoinsDetails';
+import CoinsDetails from '../coinDetail/CoinsDetails';
 import Colors from 'cryptoTracker2/src/res/colors';
 
 const Stack = createStackNavigator();
