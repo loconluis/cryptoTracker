@@ -1,33 +1,44 @@
 import React from 'react';
 
-import {View, Text, Pressable, StyleSheet} from 'react-native';
+import { View, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
+import CoinItem from './CoinItem';
 import Http from 'cryptoTracker2/src/libs/http';
+import Colors from 'cryptoTracker2/src/res/colors';
 
-const CoinsScreen = ({navigation}) => {
-  const getData = async () => {
-    try {
-      const coins = await Http.instance.get(
-        'https://api.coinlore.net/api/tickers/',
-      );
-      console.log('res', coins);
-    } catch (err) {
-      console.log('err in getData', err);
-    }
-  };
+const CoinsScreen = ({ navigation }) => {
+  const [coins, setCoins] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+
   React.useEffect(() => {
     getData();
   }, []);
-  const handlePress = () => {
-    console.log('Go to details');
-    navigation.navigate('CoinsDetail');
+
+  const handlePress = (coin) => {
+    navigation.navigate('CoinsDetail', { coin });
+  };
+  const getData = async () => {
+    try {
+      setLoading(true);
+      const _coins = await Http.instance.get(
+        'https://api.coinlore.net/api/tickers/',
+      );
+      setCoins(_coins.data);
+    } catch (err) {
+      console.log('err in getData', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titleText}>Hello Coins</Text>
-      <Pressable style={styles.btn} onPress={handlePress}>
-        <Text style={styles.btnText}>Ir a details</Text>
-      </Pressable>
+      {loading ? <ActivityIndicator color="#FFF" size="large" /> : null}
+      <FlatList
+        data={coins}
+        renderItem={({ item }) => (
+          <CoinItem item={item} onPress={() => handlePress(item)} />
+        )}
+      />
     </View>
   );
 };
@@ -35,9 +46,7 @@ const CoinsScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'red',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: Colors.charade,
   },
   titleText: {
     color: '#fff',
