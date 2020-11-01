@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet, SectionList } from 'react-native';
-import Colors from 'cryptoTracker2/src/res/colors';
-import Http from 'cryptoTracker2/src/libs/http';
 import { FlatList } from 'react-native-gesture-handler';
 import CoinMarketItem from './CoinMarketItem';
+import Colors from 'cryptoTracker2/src/res/colors';
+import Http from 'cryptoTracker2/src/libs/http';
 
 const CoinsDetails = ({ route, navigation }) => {
   const { coin } = route.params;
@@ -37,9 +37,7 @@ const CoinsDetails = ({ route, navigation }) => {
 
   const getMarket = async (_id) => {
     const uri = `https://api.coinlore.net/api/coin/markets/?id=${_id}`;
-    console.log('uri', uri);
     const _market = await Http.instance.get(uri);
-    console.log('market', _market);
     setMarket(_market);
   };
 
